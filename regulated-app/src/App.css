@@ -1,0 +1,422 @@
+/* App Layout */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+.app-header {
+  text-align: center;
+  padding: 1.5rem 0 1rem;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #e8e8e8;
+  letter-spacing: 0.05em;
+}
+
+.app-subtitle {
+  color: #888;
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+/* Navigation */
+.app-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #2a2a3a;
+  padding-bottom: 0.5rem;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  color: #999;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  background: #1a1a2e;
+  color: #ccc;
+}
+
+.nav-active {
+  background: #1a1a2e;
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+/* Page Common */
+.page h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: #e8e8e8;
+}
+
+.page-description {
+  color: #888;
+  margin: 0 0 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.empty-state {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: #1a1a2e;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  color: #e8e8e8;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #e74c3c;
+}
+
+.form-group input[type="range"] {
+  width: 100%;
+  accent-color: #e74c3c;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #c0392b;
+}
+
+.btn-secondary {
+  background: #2a2a3a;
+  color: #ccc;
+}
+
+.btn-secondary:hover {
+  background: #3a3a4a;
+}
+
+.btn-small {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  background: #2a2a3a;
+  color: #ccc;
+}
+
+.btn-small:hover {
+  background: #3a3a4a;
+}
+
+.btn-danger {
+  background: #5a1a1a;
+  color: #e74c3c;
+}
+
+.btn-danger:hover {
+  background: #6a2a2a;
+}
+
+/* Event List */
+.event-form {
+  background: #12121e;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #2a2a3a;
+}
+
+.event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #12121e;
+  border: 1px solid #2a2a3a;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.event-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.event-name {
+  color: #e8e8e8;
+  font-weight: 500;
+}
+
+.event-effect {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.effect-bar {
+  width: 80px;
+  height: 6px;
+  background: #2a2a3a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.effect-fill {
+  display: block;
+  height: 100%;
+  background: #e74c3c;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.event-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* Day Log Checklist */
+.day-score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #12121e;
+  border: 1px solid #2a2a3a;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  color: #aaa;
+}
+
+.score-active {
+  color: #e74c3c;
+}
+
+.event-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  background: #12121e;
+  border: 1px solid #2a2a3a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.checklist-item:hover {
+  border-color: #3a3a4a;
+}
+
+.checklist-item input[type="checkbox"] {
+  accent-color: #e74c3c;
+  width: 18px;
+  height: 18px;
+}
+
+.checklist-name {
+  flex: 1;
+  color: #e8e8e8;
+}
+
+.checklist-effect {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Recent Logs */
+.recent-logs {
+  margin-top: 2rem;
+}
+
+.recent-logs h3 {
+  color: #aaa;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.log-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.log-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: #12121e;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  margin-bottom: 0.4rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  font-size: 0.85rem;
+}
+
+.log-item:hover {
+  border-color: #3a3a4a;
+}
+
+.log-item-active {
+  border-color: #e74c3c;
+}
+
+.log-date {
+  color: #e8e8e8;
+}
+
+.log-events {
+  color: #888;
+}
+
+.log-score {
+  color: #e74c3c;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #12121e;
+  border: 1px solid #2a2a3a;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.stat-card-wide {
+  grid-column: span 2;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e8e8e8;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-align: center;
+}
+
+.trend-up {
+  color: #e74c3c;
+}
+
+.trend-down {
+  color: #2ecc71;
+}
+
+/* Charts */
+.chart-section {
+  margin-bottom: 2rem;
+}
+
+.chart-section h3 {
+  color: #aaa;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .app {
+    padding: 0.75rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .event-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .event-actions {
+    align-self: flex-end;
+  }
+}
