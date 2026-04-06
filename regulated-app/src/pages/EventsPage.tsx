@@ -1,15 +1,52 @@
-import { useState } from 'react';
-import type { DysregulationEvent } from '../types';
+import { useState, useEffect, useMemo } from 'react';
+import type { DysregulationEvent, DayLog } from '../types';
 
 interface Props {
   events: DysregulationEvent[];
   setEvents: React.Dispatch<React.SetStateAction<DysregulationEvent[]>>;
+  logs: DayLog[];
 }
 
-export function EventsPage({ events, setEvents }: Props) {
+function timeSince(dateStr: string, now: Date): string {
+  const eventDate = new Date(dateStr + 'T23:59:59');
+  const diffMs = now.getTime() - eventDate.getTime();
+  if (diffMs < 0) return 'today';
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (mins > 0) parts.push(`${mins}m`);
+  return parts.length > 0 ? parts.join(' ') + ' ago' : 'just now';
+}
+
+export function EventsPage({ events, setEvents, logs }: Props) {
   const [name, setName] = useState('');
   const [effect, setEffect] = useState(5);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [now, setNow] = useState(() => new Date());
+
+  // Update "now" every minute so the timers stay current
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Map each event ID to its most recent log date
+  const lastOccurrence = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const log of logs) {
+      for (const eid of log.eventIds) {
+        if (!map[eid] || log.date > map[eid]) {
+          map[eid] = log.date;
+        }
+      }
+    }
+    return map;
+  }, [logs]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,6 +154,11 @@ export function EventsPage({ events, setEvents }: Props) {
                     />
                   </span>
                   {event.effect}/10
+                </span>
+                <span className="event-since">
+                  {lastOccurrence[event.id]
+                    ? timeSince(lastOccurrence[event.id], now)
+                    : 'never logged'}
                 </span>
               </div>
               <div className="event-actions">
