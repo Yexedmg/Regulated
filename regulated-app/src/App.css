@@ -241,6 +241,98 @@
   opacity: 0.8;
 }
 
+.event-since-reg {
+  color: #2ecc71;
+}
+
+.effect-fill-reg {
+  background: #2ecc71;
+}
+
+.reg-form {
+  border-color: #1a3a2a;
+}
+
+.reg-item {
+  border-color: #1a3a2a;
+}
+
+.btn-reg {
+  background: #2ecc71;
+  color: #0d0d1a;
+  font-weight: 600;
+}
+
+.btn-reg:hover {
+  background: #27ae60;
+}
+
+.range-reg {
+  accent-color: #2ecc71;
+}
+
+.nav-btn-reg:hover {
+  color: #2ecc71;
+}
+
+.nav-active-reg {
+  background: #1a1a2e;
+  color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+/* Day Scores */
+.day-scores {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.day-scores .day-score {
+  flex: 1;
+}
+
+.day-score-reg {
+  border-color: #1a3a2a;
+}
+
+.score-reg-active {
+  color: #2ecc71;
+}
+
+.checklist-heading {
+  font-size: 0.9rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.checklist-heading-dysreg {
+  color: #e74c3c;
+}
+
+.checklist-heading-reg {
+  color: #2ecc71;
+}
+
+.checklist-item-reg {
+  border-color: #1a3a2a;
+}
+
+.checklist-item-reg input[type="checkbox"] {
+  accent-color: #2ecc71;
+}
+
+.log-score-dysreg {
+  color: #e74c3c;
+}
+
+.log-score-reg {
+  color: #2ecc71;
+}
+
+.trend-down-reg {
+  color: #e74c3c;
+}
+
 .event-actions {
   display: flex;
   gap: 0.4rem;
