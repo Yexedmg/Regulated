@@ -9,15 +9,17 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  Legend,
 } from 'recharts';
-import type { DysregulationEvent, DayLog } from '../types';
+import type { DysregulationEvent, RegulationEvent, DayLog } from '../types';
 
 interface Props {
   events: DysregulationEvent[];
+  regEvents: RegulationEvent[];
   logs: DayLog[];
 }
 
-export function TrendsPage({ events, logs }: Props) {
+export function TrendsPage({ events, regEvents, logs }: Props) {
   const sortedLogs = useMemo(
     () => [...logs].sort((a, b) => a.date.localeCompare(b.date)),
     [logs]
@@ -25,19 +27,23 @@ export function TrendsPage({ events, logs }: Props) {
 
   const dailyScores = useMemo(() => {
     return sortedLogs.map(log => {
-      const score = log.eventIds.reduce((sum, eid) => {
+      const dysregScore = log.eventIds.reduce((sum, eid) => {
         const ev = events.find(e => e.id === eid);
+        return sum + (ev?.effect ?? 0);
+      }, 0);
+      const regScore = (log.regEventIds ?? []).reduce((sum, eid) => {
+        const ev = regEvents.find(e => e.id === eid);
         return sum + (ev?.effect ?? 0);
       }, 0);
       return {
         date: log.date,
-        score,
-        events: log.eventIds.length,
+        dysregulation: dysregScore,
+        regulation: regScore,
       };
     });
-  }, [sortedLogs, events]);
+  }, [sortedLogs, events, regEvents]);
 
-  const eventFrequency = useMemo(() => {
+  const dysregFrequency = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const log of logs) {
       for (const eid of log.eventIds) {
@@ -48,37 +54,61 @@ export function TrendsPage({ events, logs }: Props) {
       .map(ev => ({
         name: ev.name,
         count: counts[ev.id] ?? 0,
-        effect: ev.effect,
         totalImpact: (counts[ev.id] ?? 0) * ev.effect,
       }))
       .sort((a, b) => b.totalImpact - a.totalImpact);
   }, [events, logs]);
 
+  const regFrequency = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const log of logs) {
+      for (const eid of (log.regEventIds ?? [])) {
+        counts[eid] = (counts[eid] ?? 0) + 1;
+      }
+    }
+    return regEvents
+      .map(ev => ({
+        name: ev.name,
+        count: counts[ev.id] ?? 0,
+        totalImpact: (counts[ev.id] ?? 0) * ev.effect,
+      }))
+      .sort((a, b) => b.totalImpact - a.totalImpact);
+  }, [regEvents, logs]);
+
   const stats = useMemo(() => {
     if (dailyScores.length === 0) return null;
 
     const totalDays = dailyScores.length;
-    const dysregulatedDays = dailyScores.filter(d => d.score > 0).length;
-    const avgScore =
-      dailyScores.reduce((sum, d) => sum + d.score, 0) / totalDays;
-    const maxScore = Math.max(...dailyScores.map(d => d.score));
+    const dysregulatedDays = dailyScores.filter(d => d.dysregulation > 0).length;
+    const regulatedDays = dailyScores.filter(d => d.regulation > 0).length;
+    const avgDysreg =
+      dailyScores.reduce((sum, d) => sum + d.dysregulation, 0) / totalDays;
+    const avgReg =
+      dailyScores.reduce((sum, d) => sum + d.regulation, 0) / totalDays;
 
-    // Calculate trend (compare first half vs second half)
-    let trendPercent = 0;
+    let dysregTrend = 0;
+    let regTrend = 0;
     if (dailyScores.length >= 4) {
       const mid = Math.floor(dailyScores.length / 2);
       const firstHalf = dailyScores.slice(0, mid);
       const secondHalf = dailyScores.slice(mid);
-      const firstAvg =
-        firstHalf.reduce((s, d) => s + d.score, 0) / firstHalf.length;
-      const secondAvg =
-        secondHalf.reduce((s, d) => s + d.score, 0) / secondHalf.length;
-      if (firstAvg > 0) {
-        trendPercent = ((secondAvg - firstAvg) / firstAvg) * 100;
+      const firstDysreg =
+        firstHalf.reduce((s, d) => s + d.dysregulation, 0) / firstHalf.length;
+      const secondDysreg =
+        secondHalf.reduce((s, d) => s + d.dysregulation, 0) / secondHalf.length;
+      const firstReg =
+        firstHalf.reduce((s, d) => s + d.regulation, 0) / firstHalf.length;
+      const secondReg =
+        secondHalf.reduce((s, d) => s + d.regulation, 0) / secondHalf.length;
+      if (firstDysreg > 0) {
+        dysregTrend = ((secondDysreg - firstDysreg) / firstDysreg) * 100;
+      }
+      if (firstReg > 0) {
+        regTrend = ((secondReg - firstReg) / firstReg) * 100;
       }
     }
 
-    return { totalDays, dysregulatedDays, avgScore, maxScore, trendPercent };
+    return { totalDays, dysregulatedDays, regulatedDays, avgDysreg, avgReg, dysregTrend, regTrend };
   }, [dailyScores]);
 
   if (logs.length === 0) {
@@ -92,11 +122,17 @@ export function TrendsPage({ events, logs }: Props) {
     );
   }
 
+  const formatTrend = (percent: number, label: string) => {
+    const dir = percent > 0 ? 'Upward' : percent < 0 ? 'Downward' : 'Stable';
+    const suffix = percent !== 0 ? ` by ${Math.abs(percent).toFixed(1)}%` : '';
+    return `${label}: ${dir} trend${suffix}`;
+  };
+
   return (
     <div className="page">
       <h2>Trends</h2>
       <p className="page-description">
-        See how your dysregulation changes over time.
+        See how your dysregulation and regulation change over time.
       </p>
 
       {stats && (
@@ -110,39 +146,32 @@ export function TrendsPage({ events, logs }: Props) {
             <span className="stat-label">Days Dysregulated</span>
           </div>
           <div className="stat-card">
-            <span className="stat-value">{stats.avgScore.toFixed(1)}</span>
-            <span className="stat-label">Avg. Score</span>
+            <span className="stat-value">{stats.regulatedDays}</span>
+            <span className="stat-label">Days Regulated</span>
           </div>
           <div className="stat-card">
-            <span className="stat-value">{stats.maxScore}</span>
-            <span className="stat-label">Peak Score</span>
+            <span className="stat-value">
+              <span style={{ color: '#e74c3c' }}>{stats.avgDysreg.toFixed(1)}</span>
+              {' / '}
+              <span style={{ color: '#2ecc71' }}>{stats.avgReg.toFixed(1)}</span>
+            </span>
+            <span className="stat-label">Avg. Dysreg / Reg</span>
           </div>
           <div className="stat-card stat-card-wide">
-            <span
-              className={`stat-value ${
-                stats.trendPercent > 0
-                  ? 'trend-up'
-                  : stats.trendPercent < 0
-                  ? 'trend-down'
-                  : ''
-              }`}
-            >
-              {stats.trendPercent > 0 ? 'Upward' : stats.trendPercent < 0 ? 'Downward' : 'Stable'}{' '}
-              trend{stats.trendPercent !== 0 && ` by ${Math.abs(stats.trendPercent).toFixed(1)}%`}
+            <span className={`stat-value ${stats.dysregTrend > 0 ? 'trend-up' : stats.dysregTrend < 0 ? 'trend-down' : ''}`}>
+              {formatTrend(stats.dysregTrend, 'Dysregulation')}
             </span>
-            <span className="stat-label">
-              {stats.trendPercent > 0
-                ? 'Dysregulation is increasing'
-                : stats.trendPercent < 0
-                ? 'Dysregulation is decreasing'
-                : 'No significant change'}
+          </div>
+          <div className="stat-card stat-card-wide">
+            <span className={`stat-value ${stats.regTrend > 0 ? 'trend-down-reg' : stats.regTrend < 0 ? 'trend-up' : ''}`}>
+              {formatTrend(stats.regTrend, 'Regulation')}
             </span>
           </div>
         </div>
       )}
 
       <div className="chart-section">
-        <h3>Dysregulation Over Time</h3>
+        <h3>Scores Over Time</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={dailyScores}>
             <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -159,23 +188,32 @@ export function TrendsPage({ events, logs }: Props) {
                 borderRadius: '8px',
               }}
             />
+            <Legend />
             <Line
               type="monotone"
-              dataKey="score"
+              dataKey="dysregulation"
               stroke="#e74c3c"
               strokeWidth={2}
               dot={{ fill: '#e74c3c', r: 4 }}
-              name="Dysregulation Score"
+              name="Dysregulation"
+            />
+            <Line
+              type="monotone"
+              dataKey="regulation"
+              stroke="#2ecc71"
+              strokeWidth={2}
+              dot={{ fill: '#2ecc71', r: 4 }}
+              name="Regulation"
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      {eventFrequency.length > 0 && (
+      {dysregFrequency.length > 0 && (
         <div className="chart-section">
-          <h3>Impact by Event</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={eventFrequency} layout="vertical">
+          <h3>Dysregulation Impact by Event</h3>
+          <ResponsiveContainer width="100%" height={Math.max(200, dysregFrequency.length * 40)}>
+            <BarChart data={dysregFrequency} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#333" />
               <XAxis type="number" tick={{ fontSize: 12, fill: '#999' }} />
               <YAxis
@@ -192,6 +230,33 @@ export function TrendsPage({ events, logs }: Props) {
                 }}
               />
               <Bar dataKey="totalImpact" fill="#e74c3c" name="Total Impact" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="count" fill="#3498db" name="Occurrences" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {regFrequency.length > 0 && (
+        <div className="chart-section">
+          <h3>Regulation Impact by Event</h3>
+          <ResponsiveContainer width="100%" height={Math.max(200, regFrequency.length * 40)}>
+            <BarChart data={regFrequency} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis type="number" tick={{ fontSize: 12, fill: '#999' }} />
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={120}
+                tick={{ fontSize: 12, fill: '#999' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#1a1a2e',
+                  border: '1px solid #333',
+                  borderRadius: '8px',
+                }}
+              />
+              <Bar dataKey="totalImpact" fill="#2ecc71" name="Total Impact" radius={[0, 4, 4, 0]} />
               <Bar dataKey="count" fill="#3498db" name="Occurrences" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
