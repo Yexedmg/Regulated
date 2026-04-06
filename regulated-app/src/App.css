@@ -235,6 +235,12 @@
   transition: width 0.3s;
 }
 
+.event-since {
+  font-size: 0.75rem;
+  color: #e74c3c;
+  opacity: 0.8;
+}
+
 .event-actions {
   display: flex;
   gap: 0.4rem;

@@ -40,7 +40,7 @@ function App() {
       </nav>
 
       <main className="app-main">
-        {page === 'events' && <EventsPage events={events} setEvents={setEvents} />}
+        {page === 'events' && <EventsPage events={events} setEvents={setEvents} logs={logs} />}
         {page === 'log' && <LogPage events={events} logs={logs} setLogs={setLogs} />}
         {page === 'trends' && <TrendsPage events={events} logs={logs} />}
       </main>
