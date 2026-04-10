@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import type { DysregulationEvent, RegulationEvent, DayLog, Page } from './types';
 import { EventsPage } from './pages/EventsPage';
@@ -7,17 +7,75 @@ import { LogPage } from './pages/LogPage';
 import { TrendsPage } from './pages/TrendsPage';
 import './App.css';
 
+interface AppData {
+  events: DysregulationEvent[];
+  regEvents: RegulationEvent[];
+  logs: DayLog[];
+}
+
 function App() {
   const [page, setPage] = useState<Page>('log');
   const [events, setEvents] = useLocalStorage<DysregulationEvent[]>('dysreg-events', []);
   const [regEvents, setRegEvents] = useLocalStorage<RegulationEvent[]>('reg-events', []);
   const [logs, setLogs] = useLocalStorage<DayLog[]>('dysreg-logs', []);
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleExport = () => {
+    const data: AppData = { events, regEvents, logs };
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `regulated-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string) as AppData;
+        if (!Array.isArray(data.events) || !Array.isArray(data.logs)) {
+          setImportMsg('Invalid file format.');
+          return;
+        }
+        setEvents(data.events);
+        setRegEvents(data.regEvents ?? []);
+        setLogs(data.logs);
+        setImportMsg('Data loaded successfully.');
+      } catch {
+        setImportMsg('Failed to read file.');
+      }
+      // Reset so the same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setTimeout(() => setImportMsg(null), 3000);
+    };
+    reader.readAsText(file);
+  };
 
   return (
     <div className="app">
       <header className="app-header">
         <h1>Regulated</h1>
         <p className="app-subtitle">Track your dysregulation &amp; regulation patterns</p>
+        <div className="data-actions">
+          <button className="btn btn-small" onClick={handleExport}>Save Data</button>
+          <button className="btn btn-small" onClick={() => fileInputRef.current?.click()}>Load Data</button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleImport}
+            hidden
+          />
+        </div>
+        {importMsg && <p className="import-msg">{importMsg}</p>}
       </header>
 
       <nav className="app-nav">
