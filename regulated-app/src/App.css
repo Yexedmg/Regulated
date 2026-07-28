@@ -24,6 +24,46 @@
   font-size: 0.9rem;
 }
 
+.data-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.data-actions .btn {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.85rem;
+  border: 1px solid #3a3a4a;
+  border-radius: 8px;
+}
+
+.btn-save {
+  background: #2a2a3a;
+  color: #ccc;
+}
+
+.btn-save:hover {
+  background: #3a3a4a;
+}
+
+.btn-load {
+  background: #1a2a3a;
+  color: #3498db;
+  border-color: #3498db !important;
+}
+
+.btn-load:hover {
+  background: #1a3a5a;
+}
+
+.import-msg {
+  text-align: center;
+  color: #2ecc71;
+  font-size: 0.8rem;
+  margin: 0.5rem 0 0;
+}
+
 /* Navigation */
 .app-nav {
   display: flex;
@@ -235,6 +275,104 @@
   transition: width 0.3s;
 }
 
+.event-since {
+  font-size: 0.75rem;
+  color: #e74c3c;
+  opacity: 0.8;
+}
+
+.event-since-reg {
+  color: #2ecc71;
+}
+
+.effect-fill-reg {
+  background: #2ecc71;
+}
+
+.reg-form {
+  border-color: #1a3a2a;
+}
+
+.reg-item {
+  border-color: #1a3a2a;
+}
+
+.btn-reg {
+  background: #2ecc71;
+  color: #0d0d1a;
+  font-weight: 600;
+}
+
+.btn-reg:hover {
+  background: #27ae60;
+}
+
+.range-reg {
+  accent-color: #2ecc71;
+}
+
+.nav-btn-reg:hover {
+  color: #2ecc71;
+}
+
+.nav-active-reg {
+  background: #1a1a2e;
+  color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+/* Day Scores */
+.day-scores {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.day-scores .day-score {
+  flex: 1;
+}
+
+.day-score-reg {
+  border-color: #1a3a2a;
+}
+
+.score-reg-active {
+  color: #2ecc71;
+}
+
+.checklist-heading {
+  font-size: 0.9rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.checklist-heading-dysreg {
+  color: #e74c3c;
+}
+
+.checklist-heading-reg {
+  color: #2ecc71;
+}
+
+.checklist-item-reg {
+  border-color: #1a3a2a;
+}
+
+.checklist-item-reg input[type="checkbox"] {
+  accent-color: #2ecc71;
+}
+
+.log-score-dysreg {
+  color: #e74c3c;
+}
+
+.log-score-reg {
+  color: #2ecc71;
+}
+
+.trend-down-reg {
+  color: #e74c3c;
+}
+
 .event-actions {
   display: flex;
   gap: 0.4rem;
@@ -387,84 +525,6 @@
 
 .trend-down {
   color: #2ecc71;
-}
-
-/* Current Fix */
-.form-group textarea {
-  resize: vertical;
-  font-family: inherit;
-}
-
-.current-fix {
-  position: relative;
-  background: #12121e;
-  border: 1px solid #e74c3c;
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.current-fix-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #e74c3c;
-  border: 1px solid #e74c3c;
-  border-radius: 999px;
-  padding: 0.15rem 0.6rem;
-  margin-bottom: 0.6rem;
-}
-
-.current-fix-text {
-  color: #e8e8e8;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  margin: 0 0 0.6rem;
-  white-space: pre-wrap;
-}
-
-.current-fix-date {
-  color: #888;
-  font-size: 0.8rem;
-}
-
-.fix-history {
-  margin-top: 0.5rem;
-}
-
-.fix-history-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
-}
-
-.fix-history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  background: #12121e;
-  border: 1px solid #2a2a3a;
-  border-radius: 10px;
-  margin-bottom: 0.5rem;
-}
-
-.fix-history-info {
-  flex: 1;
-}
-
-.fix-history-text {
-  color: #ccc;
-  margin: 0 0 0.35rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
-}
-
-.fix-history-date {
-  color: #666;
-  font-size: 0.75rem;
 }
 
 /* Charts */
