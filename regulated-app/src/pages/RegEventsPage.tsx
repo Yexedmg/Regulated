@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import type { DysregulationEvent, DayLog } from '../types';
+import type { RegulationEvent, DayLog } from '../types';
 
 interface Props {
-  events: DysregulationEvent[];
-  setEvents: React.Dispatch<React.SetStateAction<DysregulationEvent[]>>;
+  events: RegulationEvent[];
+  setEvents: React.Dispatch<React.SetStateAction<RegulationEvent[]>>;
   logs: DayLog[];
 }
 
@@ -23,23 +23,21 @@ function timeSince(dateStr: string, now: Date): string {
   return parts.length > 0 ? parts.join(' ') + ' ago' : 'just now';
 }
 
-export function EventsPage({ events, setEvents, logs }: Props) {
+export function RegEventsPage({ events, setEvents, logs }: Props) {
   const [name, setName] = useState('');
   const [effect, setEffect] = useState(5);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [now, setNow] = useState(() => new Date());
 
-  // Update "now" every minute so the timers stay current
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(interval);
   }, []);
 
-  // Map each event ID to its most recent log date
   const lastOccurrence = useMemo(() => {
     const map: Record<string, string> = {};
     for (const log of logs) {
-      for (const eid of log.eventIds) {
+      for (const eid of (log.regEventIds ?? [])) {
         if (!map[eid] || log.date > map[eid]) {
           map[eid] = log.date;
         }
@@ -69,7 +67,7 @@ export function EventsPage({ events, setEvents, logs }: Props) {
     setEffect(5);
   };
 
-  const handleEdit = (event: DysregulationEvent) => {
+  const handleEdit = (event: RegulationEvent) => {
     setEditingId(event.id);
     setName(event.name);
     setEffect(event.effect);
@@ -92,42 +90,43 @@ export function EventsPage({ events, setEvents, logs }: Props) {
 
   return (
     <div className="page">
-      <h2>Dysregulation Events</h2>
+      <h2>Regulation Events</h2>
       <p className="page-description">
-        These are events that happen in the day that cause dysregulation.
-        Some dysregulate more than others. Add your events and rate their effect.
+        These are things you did to regulate your nervous system.
+        Some help more than others. Add your events and rate their effect.
       </p>
 
-      <form onSubmit={handleSubmit} className="event-form">
+      <form onSubmit={handleSubmit} className="event-form reg-form">
         <div className="form-group">
-          <label htmlFor="event-name">Event Name</label>
+          <label htmlFor="reg-event-name">Event Name</label>
           <input
-            id="event-name"
+            id="reg-event-name"
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            placeholder="e.g., Cold exposure, Poor sleep..."
+            placeholder="e.g., Meditation, Walk in nature..."
           />
         </div>
         <div className="form-group">
-          <label htmlFor="event-effect">
+          <label htmlFor="reg-event-effect">
             Effect: <strong>{effect}/10</strong>
           </label>
           <input
-            id="event-effect"
+            id="reg-event-effect"
             type="range"
             min={0}
             max={10}
             value={effect}
             onChange={e => setEffect(Number(e.target.value))}
+            className="range-reg"
           />
           <div className="range-labels">
             <span>0 (None)</span>
-            <span>10 (Severe)</span>
+            <span>10 (Very helpful)</span>
           </div>
         </div>
         <div className="form-actions">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-reg">
             {editingId ? 'Update Event' : 'Add Event'}
           </button>
           {editingId && (
@@ -139,23 +138,23 @@ export function EventsPage({ events, setEvents, logs }: Props) {
       </form>
 
       {events.length === 0 ? (
-        <p className="empty-state">No events yet. Add your first dysregulation event above.</p>
+        <p className="empty-state">No regulation events yet. Add your first one above.</p>
       ) : (
         <ul className="event-list">
           {events.map(event => (
-            <li key={event.id} className="event-item">
+            <li key={event.id} className="event-item reg-item">
               <div className="event-info">
                 <span className="event-name">{event.name}</span>
                 <span className="event-effect">
                   <span className="effect-bar">
                     <span
-                      className="effect-fill"
+                      className="effect-fill effect-fill-reg"
                       style={{ width: `${event.effect * 10}%` }}
                     />
                   </span>
                   {event.effect}/10
                 </span>
-                <span className="event-since">
+                <span className="event-since event-since-reg">
                   {lastOccurrence[event.id]
                     ? timeSince(lastOccurrence[event.id], now)
                     : 'never logged'}
