@@ -18,4 +18,12 @@ export interface DayLog {
   notes?: string;
 }
 
-export type Page = 'events' | 'reg-events' | 'log' | 'trends';
+export interface Goal {
+  id: string;
+  text: string;
+  targetDays?: number;
+  startDate: string; // YYYY-MM-DD
+  completedDate?: string; // YYYY-MM-DD
+}
+
+export type Page = 'events' | 'reg-events' | 'log' | 'trends' | 'goal';

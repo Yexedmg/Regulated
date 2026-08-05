@@ -1,16 +1,19 @@
 import { useState, useRef } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import type { DysregulationEvent, RegulationEvent, DayLog, Page } from './types';
+import type { DysregulationEvent, RegulationEvent, DayLog, Goal, Page } from './types';
 import { EventsPage } from './pages/EventsPage';
 import { RegEventsPage } from './pages/RegEventsPage';
 import { LogPage } from './pages/LogPage';
 import { TrendsPage } from './pages/TrendsPage';
+import { GoalPage } from './pages/GoalPage';
 import './App.css';
 
 interface AppData {
   events: DysregulationEvent[];
   regEvents: RegulationEvent[];
   logs: DayLog[];
+  goal?: Goal | null;
+  pastGoals?: Goal[];
 }
 
 function App() {
@@ -18,11 +21,13 @@ function App() {
   const [events, setEvents] = useLocalStorage<DysregulationEvent[]>('dysreg-events', []);
   const [regEvents, setRegEvents] = useLocalStorage<RegulationEvent[]>('reg-events', []);
   const [logs, setLogs] = useLocalStorage<DayLog[]>('dysreg-logs', []);
+  const [goal, setGoal] = useLocalStorage<Goal | null>('current-goal', null);
+  const [pastGoals, setPastGoals] = useLocalStorage<Goal[]>('past-goals', []);
   const [importMsg, setImportMsg] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
-    const data: AppData = { events, regEvents, logs };
+    const data: AppData = { events, regEvents, logs, goal, pastGoals };
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -48,6 +53,8 @@ function App() {
         setEvents(data.events);
         setRegEvents(data.regEvents ?? []);
         setLogs(data.logs);
+        setGoal(data.goal ?? null);
+        setPastGoals(data.pastGoals ?? []);
         setImportMsg('Data loaded successfully.');
       } catch {
         setImportMsg('Failed to read file.');
@@ -103,6 +110,12 @@ function App() {
         >
           Trends
         </button>
+        <button
+          className={`nav-btn nav-btn-goal ${page === 'goal' ? 'nav-active-goal' : ''}`}
+          onClick={() => setPage('goal')}
+        >
+          Goal
+        </button>
       </nav>
 
       <main className="app-main">
@@ -110,6 +123,7 @@ function App() {
         {page === 'reg-events' && <RegEventsPage events={regEvents} setEvents={setRegEvents} logs={logs} />}
         {page === 'log' && <LogPage events={events} regEvents={regEvents} logs={logs} setLogs={setLogs} />}
         {page === 'trends' && <TrendsPage events={events} regEvents={regEvents} logs={logs} />}
+        {page === 'goal' && <GoalPage goal={goal} setGoal={setGoal} pastGoals={pastGoals} setPastGoals={setPastGoals} />}
       </main>
     </div>
   );

@@ -558,3 +558,106 @@
     align-self: flex-end;
   }
 }
+
+/* Goal Page */
+.nav-btn-goal:hover {
+  color: #f39c12;
+}
+
+.nav-active-goal {
+  background: #1a1a2e;
+  color: #f39c12;
+  border-color: #f39c12;
+}
+
+.goal-card {
+  background: #12121e;
+  border: 1px solid #f39c12;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.goal-text {
+  font-size: 1.2rem;
+  color: #e8e8e8;
+  margin: 0 0 1.25rem;
+  line-height: 1.4;
+}
+
+.goal-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.goal-elapsed {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f39c12;
+}
+
+.goal-elapsed-label {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.15rem;
+}
+
+.goal-progress-section {
+  margin-bottom: 1.25rem;
+}
+
+.goal-progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #2a2a3a;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.goal-progress-fill {
+  height: 100%;
+  background: #f39c12;
+  border-radius: 5px;
+  transition: width 0.5s;
+}
+
+.goal-progress-label {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.goal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.past-goals {
+  margin-top: 2rem;
+}
+
+.past-goals h3 {
+  color: #aaa;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.past-goal-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.past-goal-text {
+  color: #e8e8e8;
+  font-size: 0.85rem;
+}
+
+.past-goal-dates {
+  color: #666;
+  font-size: 0.75rem;
+  display: block;
+}
