@@ -527,6 +527,84 @@
   color: #2ecc71;
 }
 
+/* Current Fix */
+.form-group textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.current-fix {
+  position: relative;
+  background: #12121e;
+  border: 1px solid #e74c3c;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.current-fix-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.current-fix-text {
+  color: #e8e8e8;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0 0 0.6rem;
+  white-space: pre-wrap;
+}
+
+.current-fix-date {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.fix-history {
+  margin-top: 0.5rem;
+}
+
+.fix-history-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.fix-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #12121e;
+  border: 1px solid #2a2a3a;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.fix-history-info {
+  flex: 1;
+}
+
+.fix-history-text {
+  color: #ccc;
+  margin: 0 0 0.35rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.fix-history-date {
+  color: #666;
+  font-size: 0.75rem;
+}
+
 /* Charts */
 .chart-section {
   margin-bottom: 2rem;

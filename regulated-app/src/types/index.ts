@@ -26,4 +26,10 @@ export interface Goal {
   completedDate?: string; // YYYY-MM-DD
 }
 
-export type Page = 'events' | 'reg-events' | 'log' | 'trends' | 'goal';
+export interface Fix {
+  id: string;
+  text: string;
+  createdAt: string; // ISO timestamp
+}
+
+export type Page = 'events' | 'reg-events' | 'log' | 'trends' | 'goal' | 'fix';
